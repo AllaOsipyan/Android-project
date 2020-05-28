@@ -18,9 +18,10 @@ import androidx.fragment.app.FragmentManager;
 import com.example.project.Model.User;
 import com.example.project.Presentor.AccountPresenter;
 import com.example.project.R;
+import com.google.android.material.textfield.TextInputLayout;
 
 public class SignInActivity extends AppCompatActivity implements SignInDialog.SignInDialogListener{
-    EditText et, pass;
+    TextInputLayout userNameTI, passTI;
     User user;
 
     @Override
@@ -29,17 +30,18 @@ public class SignInActivity extends AppCompatActivity implements SignInDialog.Si
         setContentView(R.layout.activity_main);
         presentDialog();
     }
-
     @Override
     public void onDialogPositiveClick(DialogFragment dialog) {
 
-        et = dialog.getDialog().findViewById(R.id.username);
-        pass = dialog.getDialog().findViewById(R.id.password);
-        String userName = et.getText().toString();
-        String password = pass.getText().toString();
+        userNameTI = dialog.getDialog().getWindow().findViewById(R.id.username);
+        passTI = dialog.getDialog().getWindow().findViewById(R.id.password);
+        String userName = userNameTI.getEditText().getText().toString();
+        String password = passTI.getEditText().getText().toString();
         user = new User(userName, password);
         AccountPresenter accountPresenter = new AccountPresenter(user, this);
-        accountPresenter.checkData();
+        boolean isCorrect = accountPresenter.checkData();
+        if(isCorrect)
+            dialog.dismiss();
     }
 
     public void presentDialog(){
@@ -59,9 +61,9 @@ public class SignInActivity extends AppCompatActivity implements SignInDialog.Si
         return user;
     }
 
-    public void setError(String error){
-        presentDialog();
-        Toast.makeText(this, error, Toast.LENGTH_LONG).show();
+    public void setError(String uNameError, String passError){
+        userNameTI.setError(uNameError);
+        passTI.setError(passError);
     }
 
     public void sendMessage(String message){

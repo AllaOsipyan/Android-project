@@ -22,25 +22,29 @@ public class AccountPresenter {
     }
 
 
-    public void checkData(){
+    public boolean checkData(){
         if (user.getUserName().isEmpty()|| user.getPassword().isEmpty()){
-            signInActivity.setError("Поля не должны быть пустыми");
+            signInActivity.setError("Поле должно быть заполнено","Поле должно быть заполнено");
+            return  false;
         }
         else {
             for (User u:usersAccounts.listAllUsers()
                  ) {
                 if(u.getUserName().equals(user.getUserName()) && u.getPassword().equals(user.getPassword())) {
                     signInActivity.sendMessage("Вход успешно выполнен");
-                    break;
+                    return true;
                 }
                 else {
-                    signInActivity.setError("Неправильное имя потльзователя или пароль");
+                    if(!u.getUserName().equals(user.getUserName()))
+                    signInActivity.setError("Имя пользователя введено неправильно",null);
+                    else
+                        signInActivity.setError(null,"Пароль введен неправильно");
                 }
             }
 
         }
          //   User.users.add(new User(user.getUserName(), user.getUserName()));
-
+        return false;
     }
 
 }

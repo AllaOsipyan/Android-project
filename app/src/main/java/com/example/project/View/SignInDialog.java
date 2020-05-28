@@ -9,9 +9,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.fragment.app.DialogFragment;
 
@@ -68,5 +65,25 @@ public class SignInDialog extends DialogFragment {
         return builder.create();
     }
 
-
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+        final AlertDialog d = (AlertDialog)getDialog();
+        if(d != null)
+        {
+            Button positiveButton = (Button) d.getButton(Dialog.BUTTON_POSITIVE);
+            positiveButton.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    Boolean wantToCloseDialog = false;
+                    mListener.onDialogPositiveClick(SignInDialog.this);
+                    if(wantToCloseDialog)
+                        d.dismiss();
+                        }
+            });
+        }
+    }
 }

@@ -42,10 +42,6 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
                 overridePendingTransition(0, 0);
                 return true;
-            case R.id.bookmark:
-                Intent bookMarkIntent = new Intent(this, BookmarkActivity.class);
-                startActivity(bookMarkIntent);
-                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
