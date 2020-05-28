@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">project</string>
+    <string name="enter">Вход</string>
+    <string name="bookmark">Закладки</string>
+    <string name="username">Имя пользователя</string>
+    <string name="password">Пароль</string>
 </resources>
