@@ -13,38 +13,37 @@ import com.example.project.View.SignInDialog;
 
 public class AccountPresenter {
     private SignInActivity signInActivity;
-    private User user;
-    UsersAccounts usersAccounts = new UsersAccounts();
+    UsersAccounts usersAccounts;
 
-    public AccountPresenter(User user, SignInActivity signInActivity) {
-        this.user = user;
+    public AccountPresenter(SignInActivity signInActivity) {
         this.signInActivity = signInActivity;
+        usersAccounts = new UsersAccounts(this.signInActivity);
     }
 
 
-    public boolean checkData(){
-        if (user.getUserName().isEmpty()|| user.getPassword().isEmpty()){
+    public boolean checkData(String userName, String password){
+        if (userName.isEmpty()|| password.isEmpty()){
             signInActivity.setError("Поле должно быть заполнено","Поле должно быть заполнено");
             return  false;
         }
         else {
-            for (User u:usersAccounts.listAllUsers()
-                 ) {
-                if(u.getUserName().equals(user.getUserName()) && u.getPassword().equals(user.getPassword())) {
-                    signInActivity.sendMessage("Вход успешно выполнен");
-                    return true;
-                }
-                else {
-                    if(!u.getUserName().equals(user.getUserName()))
-                    signInActivity.setError("Имя пользователя введено неправильно",null);
-                    else
-                        signInActivity.setError(null,"Пароль введен неправильно");
-                }
+            User user = usersAccounts.findUserByName(userName);
+            if (user==null){
+                signInActivity.setError("Имя пользователя введено неправильно",null);
+                return false;
+            }
+            else if (!user.getPassword().equals(password)){
+                signInActivity.setError(null,"Пароль введен неправильно");
+                return false;
+            }
+            else{
+                signInActivity.sendMessage("Вход успешно выполнен");
+                return true;
             }
 
+
         }
-         //   User.users.add(new User(user.getUserName(), user.getUserName()));
-        return false;
+
     }
 
 }
