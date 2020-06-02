@@ -4,4 +4,8 @@
     <string name="bookmark">Закладки</string>
     <string name="username">Имя пользователя</string>
     <string name="password">Пароль</string>
+    <string name="registration">Регистрация</string>
+    <string name="exit">Выход</string>
+    <string name="registrate">Зарегистрироваться</string>
+    <string name="email">Email</string>
 </resources>

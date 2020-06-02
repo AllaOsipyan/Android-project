@@ -1,8 +1,11 @@
 package com.example.project.View;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.widget.EditText;
@@ -23,11 +26,15 @@ import com.google.android.material.textfield.TextInputLayout;
 public class SignInActivity extends AppCompatActivity implements SignInDialog.SignInDialogListener{
     TextInputLayout userNameTI, passTI;
     User user;
-
+    SharedPreferences sharedPreferences;
+    SharedPreferences.Editor editor;
+    @SuppressLint("CommitPrefEdits")
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        sharedPreferences = getSharedPreferences("APP_PREFERENCES", Context.MODE_PRIVATE);
+        editor = sharedPreferences.edit();
         presentDialog();
     }
     @Override
@@ -38,10 +45,17 @@ public class SignInActivity extends AppCompatActivity implements SignInDialog.Si
         String userName = userNameTI.getEditText().getText().toString();
         String password = passTI.getEditText().getText().toString();
         user = new User(userName, password);
-        AccountPresenter accountPresenter = new AccountPresenter(user, this);
-        boolean isCorrect = accountPresenter.checkData();
-        if(isCorrect)
+        AccountPresenter accountPresenter = new AccountPresenter(this);
+        boolean isValid = accountPresenter.checkData(userName, password);
+        if(isValid){
+
+            editor.clear();
+            editor.putBoolean("isInAccount", true).commit();
             dialog.dismiss();
+            Intent intent = new Intent(this, MainAccountActivity.class);
+            startActivity(intent);
+            finishAffinity();
+        }
     }
 
     public void presentDialog(){

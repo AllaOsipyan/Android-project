@@ -20,6 +20,8 @@
         </activity>
         <activity android:name=".View.SignInActivity" />
         <activity android:name=".View.BookmarkActivity" />
+        <activity android:name=".View.RegistrationActivity" />
+        <activity android:name=".View.MainAccountActivity" />
     </application>
     <meta-data
         android:name="com.google.android.gms.version"
