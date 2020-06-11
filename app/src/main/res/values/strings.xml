@@ -8,4 +8,5 @@
     <string name="exit">Выход</string>
     <string name="registrate">Зарегистрироваться</string>
     <string name="email">Email</string>
+    <string name="what_to_read">Что прочитать сегодня?</string>
 </resources>
