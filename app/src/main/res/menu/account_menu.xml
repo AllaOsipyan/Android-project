@@ -1,7 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-    <item android:id="@+id/acc_exit"
+    <item
+        android:id="@+id/search_book"
+        android:icon="@drawable/ic_search_24px"
+        android:title="Search"
+        app:actionViewClass="android.widget.SearchView"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/acc_exit"
         android:icon="@drawable/ic_exit_to_app_24px"
         android:title="@string/exit"
         app:showAsAction="always" />

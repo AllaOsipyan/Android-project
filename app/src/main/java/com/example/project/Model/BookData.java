@@ -26,7 +26,9 @@ public class BookData {
         this.title = title;
     }
 
-
+    public String getImageLink(String type) {
+        return imageLinks.get(type).toString();
+    }
 
 
     public JsonObject getImageLinks() {
@@ -39,4 +41,5 @@ public class BookData {
 
 
 }
+
 
