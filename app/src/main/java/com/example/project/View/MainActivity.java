@@ -1,39 +1,42 @@
 package com.example.project.View;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.DialogFragment;
-
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.SharedPreferences.Editor;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
+import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.example.project.Model.User;
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.project.Model.BookData;
+import com.example.project.Presentor.BookPresenter;
 import com.example.project.R;
-import com.example.project.View.SignInDialog;
-import com.google.android.material.textfield.TextInputLayout;
+import com.squareup.picasso.OkHttpDownloader;
+import com.squareup.picasso.Picasso;
+
 
 public class MainActivity extends AppCompatActivity {
     SharedPreferences sharedPreferences;
     Editor editor;
+    ImageView bookImage;
+    TextView bookTitle;
+    BookPresenter bookPresenter;
     @SuppressLint("CommitPrefEdits")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
-
+        bookImage = findViewById(R.id.book_image);
+        bookPresenter = new BookPresenter(this);
+        bookTitle = findViewById(R.id.book_title);
 
         sharedPreferences = getSharedPreferences("APP_PREFERENCES", Context.MODE_PRIVATE);
         editor = sharedPreferences.edit();
@@ -46,8 +49,8 @@ public class MainActivity extends AppCompatActivity {
         editor.clear();
 
         editor.commit();
-    }
 
+    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -72,4 +75,18 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    public void findNewBook(View view){
+
+        bookPresenter.getBook();
+    }
+    public void showBook(BookData book){
+        String path =book.getImageLinks().get("smallThumbnail").toString();
+        Picasso.Builder builder = new Picasso.Builder(this);
+        builder.downloader(new OkHttpDownloader(this));
+        builder.build()
+                .load(path.replace("\"","").trim())
+                .into(bookImage);
+        System.out.println(path.replace("\"",""));
+        bookTitle.setText(book.getTitle());
+    }
 }
