@@ -76,17 +76,15 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void findNewBook(View view){
-
-        bookPresenter.getBook();
+        bookPresenter.getBook("flower");
     }
-    public void showBook(BookData book){
-        String path =book.getImageLinks().get("smallThumbnail").toString();
+
+    public void showBook(String title, String path ){
         Picasso.Builder builder = new Picasso.Builder(this);
         builder.downloader(new OkHttpDownloader(this));
         builder.build()
                 .load(path.replace("\"","").trim())
                 .into(bookImage);
-        System.out.println(path.replace("\"",""));
-        bookTitle.setText(book.getTitle());
+        bookTitle.setText(title);
     }
 }

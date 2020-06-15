@@ -31,7 +31,7 @@ public class JsonConvert {
     private static String BASE_URL = "https://www.googleapis.com";
     private static String API_KEY = "AIzaSyBu8p3GUzpvoj6PVlZRGi6XMvD1l0kc9F0";
     private static Gson gson = new GsonBuilder().create();
-    private static OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
+
     static Retrofit  retrofit = new Retrofit.Builder()
             .addConverterFactory(GsonConverterFactory.create(gson))
             .baseUrl(BASE_URL)
@@ -42,8 +42,14 @@ public class JsonConvert {
     public static class ParseTask extends AsyncTask {
         BookPresenter bookPresenter = new BookPresenter();
         BookData bookData;
+        String bookName = "qwertyuiopsd";
+
         public  List<BookData> booksList = new ArrayList<>();
         public Link book_response = retrofit.create(Link.class);
+
+        public ParseTask(String bookName){
+            this.bookName = bookName;
+        }
 
         @Override
         protected List<BookData> doInBackground(Object[] objects) {
@@ -51,7 +57,7 @@ public class JsonConvert {
             try {
                 Map<String, String> mapJson = new HashMap<String, String>();
                 mapJson.put("key", API_KEY);
-                mapJson.put("q", "flower");
+                mapJson.put("q", bookName);
                 Call<JsonObject> call = book_response.getBooks(mapJson);
                 Response<JsonObject> response = call.execute();
 
@@ -78,7 +84,8 @@ public class JsonConvert {
         }
         @Override
         protected void onPostExecute(Object o) {
-            bookPresenter.showBook(booksList);
+            bookPresenter.presentBook(booksList);
+
         }
     }
 }
