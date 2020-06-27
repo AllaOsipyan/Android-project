@@ -5,6 +5,8 @@ import android.os.AsyncTask;
 import android.widget.ImageView;
 
 import com.example.project.Presentor.BookPresenter;
+import com.example.project.View.MainAccountActivity;
+import com.example.project.View.MainActivity;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
@@ -42,13 +44,18 @@ public class JsonConvert {
     public static class ParseTask extends AsyncTask {
         BookPresenter bookPresenter = new BookPresenter();
         BookData bookData;
+        Context context;
         String bookName = "qwertyuiopsd";
-
+        String source;
+        BookService bookService ;
         public  List<BookData> booksList = new ArrayList<>();
         public Link book_response = retrofit.create(Link.class);
 
-        public ParseTask(String bookName){
+        public ParseTask(Context context, String bookName){
+            this.context = context;
             this.bookName = bookName;
+            bookService = new BookService(context);
+            this.source = source;
         }
 
         @Override
@@ -84,8 +91,11 @@ public class JsonConvert {
         }
         @Override
         protected void onPostExecute(Object o) {
-            bookPresenter.presentBook(booksList);
 
+            for (BookData book : booksList) {
+                bookService.addBook(book, bookName);
+            }
+            bookPresenter.presentBook(context);
         }
     }
 }

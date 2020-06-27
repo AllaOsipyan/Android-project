@@ -11,8 +11,7 @@
         <item name="colorOnSurface">@color/colorPrimaryDark</item>
         <item name="colorButtonNormal">@color/colorPrimaryDark</item>
         <item name="materialCardViewStyle">@style/Widget.App.CardView</item>
-        <item name="searchViewStyle">@style/SearchViewStyle</item>
-
+        <item name="android:textColorPrimary">@color/colorBackground</item>
     </style>
 
     <style name="Widget.App.CardView" parent="Widget.MaterialComponents.CardView">
@@ -30,10 +29,5 @@
         <item name="cornerSize">20dp</item>
     </style>
 
-    <style name="SearchViewStyle" parent="Widget.AppCompat.SearchView">
-        <!-- Gets rid of the search icon -->
-        <item name="searchIcon">@drawable/ic_search_24px</item>
-        <!-- Gets rid of the "underline" in the text -->
-        <item name="queryBackground">@color/colorBackground</item>
-    </style>
+
 </resources>
