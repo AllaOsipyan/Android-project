@@ -34,10 +34,11 @@ public class UsersAccounts {
         String[] whereArgs = new String[]{name};
         Cursor cursor = sqLiteDatabase.query("users", null,selection,whereArgs,null,null, null);
         if(cursor.moveToFirst()){
+            int idIndex = cursor.getColumnIndex("ID");
             int nameIndex = cursor.getColumnIndex("NAME");
             int passwordIndex = cursor.getColumnIndex("PASSWORD");
             int emailIndex = cursor.getColumnIndex("EMAIL");
-            return  new User(cursor.getString(nameIndex), cursor.getString(passwordIndex), cursor.getString(emailIndex));
+            return  new User(cursor.getInt(idIndex), cursor.getString(nameIndex), cursor.getString(passwordIndex), cursor.getString(emailIndex));
         }
         cursor.close();
         return null;
@@ -48,11 +49,12 @@ public class UsersAccounts {
         SQLiteDatabase sqLiteDatabase = dbhelper.getWritableDatabase();
         Cursor cursor = sqLiteDatabase.query("users", null,null,null,null,null, null);
         if(cursor.moveToFirst()){
-            int nameIndex = cursor.getColumnIndex("NAME");
-            int passwordIndex = cursor.getColumnIndex("PASSWORD");
-            int emailIndex = cursor.getColumnIndex("EMAIL");
             do {
-                users.add(new User(cursor.getString(nameIndex), cursor.getString(passwordIndex), cursor.getString(emailIndex)));
+                int idIndex = cursor.getColumnIndex("ID");
+                int nameIndex = cursor.getColumnIndex("NAME");
+                int passwordIndex = cursor.getColumnIndex("PASSWORD");
+                int emailIndex = cursor.getColumnIndex("EMAIL");
+                users.add(new User(cursor.getInt(idIndex), cursor.getString(nameIndex), cursor.getString(passwordIndex), cursor.getString(emailIndex)));
                 Log.d("mlog", "name = " + cursor.getString(nameIndex) + ";  email= " + cursor.getString(emailIndex));
             }while (cursor.moveToNext());
         }

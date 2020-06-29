@@ -15,7 +15,6 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.project.Model.BookData;
 import com.example.project.Presentor.BookPresenter;
 import com.example.project.R;
 import com.squareup.picasso.OkHttpDownloader;
@@ -76,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void findNewBook(View view){
-        bookPresenter.getBook("flower");
+        bookPresenter.getBook(this,"flower");
     }
 
     public void showBook(String title, String path ){
@@ -84,7 +83,9 @@ public class MainActivity extends AppCompatActivity {
         builder.downloader(new OkHttpDownloader(this));
         builder.build()
                 .load(path.replace("\"","").trim())
+                .fit()
                 .into(bookImage);
         bookTitle.setText(title);
     }
+
 }

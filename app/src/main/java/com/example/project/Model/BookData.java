@@ -1,6 +1,7 @@
 package com.example.project.Model;
 
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import org.json.JSONObject;
@@ -10,6 +11,8 @@ public class BookData {
     private JsonObject imageLinks;
     private JsonArray authors;
 
+
+    private String image;
     public JsonArray getAuthors() {
         return authors;
     }
@@ -27,7 +30,14 @@ public class BookData {
     }
 
     public String getImageLink(String type) {
-        return imageLinks.get(type).toString();
+        return image!=null? image:imageLinks.get(type).toString();
+    }
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 
 
@@ -39,6 +49,13 @@ public class BookData {
         this.imageLinks = imageLinks;
     }
 
+    public String transformAuthors(){
+        StringBuilder authorsBuilder = new StringBuilder();
+        if (authors!=null)
+            for (JsonElement author :authors)
+                authorsBuilder.append(author.toString()+"\n");
+        return authorsBuilder.toString();
+    }
 
 }
 

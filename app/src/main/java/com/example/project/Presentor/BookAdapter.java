@@ -65,8 +65,11 @@ public class BookAdapter  extends RecyclerView.Adapter<BookAdapter.BookViewHolde
         bookViewHolder.bookTitle.setText(mDataset.get(i).getTitle());
         JsonArray authorsList =  mDataset.get(i).getAuthors();
         if (authorsList!=null)
-            for (JsonElement author :authorsList)
-                authors.append(author.toString()+"\n");
+            for (int j=0; j < authorsList.size(); j++) {
+                authors.append(authorsList.get(j).toString() + "\n");
+                if (j==1)
+                    break;
+            }
 
 
         bookViewHolder.bookAuthors.setText(authors);
