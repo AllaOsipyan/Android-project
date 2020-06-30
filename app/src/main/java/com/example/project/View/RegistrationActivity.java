@@ -39,7 +39,7 @@ public class RegistrationActivity extends Activity {
         passTI = findViewById(R.id.password_reg);
         passConfTI =findViewById(R.id.confirm_pass_reg);
         emailTI = findViewById(R.id.email_reg);
-        errTV = findViewById(R.id.textView2);
+        errTV = findViewById(R.id.error_tv);
         sharedPreferences = getSharedPreferences("APP_PREFERENCES", Context.MODE_PRIVATE);
         editor = sharedPreferences.edit();
 

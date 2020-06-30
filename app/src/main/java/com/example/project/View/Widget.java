@@ -41,14 +41,16 @@ public class Widget extends AppWidgetProvider {
 
         ArrayList<String> lastBooksTitles = new ArrayList<>();
         ArrayList<String> lastBooksImages = new ArrayList<>();
-        for (int i = books.size()-10; i < books.size(); i++){
-            lastBooksTitles.add(books.get(i).getTitle());
-            lastBooksImages.add(books.get(i).getImage());
-        }
         Intent active = new Intent(context, Widget.class);
         active.setAction(ACTION_WIDGET_RECEIVER);
-        active.putStringArrayListExtra("title", lastBooksTitles);
-        active.putStringArrayListExtra("image", lastBooksImages);
+        if(books.size()>=10){
+            for (int i = books.size()-10; i < books.size(); i++){
+                lastBooksTitles.add(books.get(i).getTitle());
+                lastBooksImages.add(books.get(i).getImage());
+            }
+
+            active.putStringArrayListExtra("title", lastBooksTitles);
+            active.putStringArrayListExtra("image", lastBooksImages);}
         PendingIntent actionPendingIntent = PendingIntent.getBroadcast(context, 0, active, 0);
         remoteViews.setOnClickPendingIntent(R.id.widget_button, actionPendingIntent);
         appWidgetManager.updateAppWidget(appWidgetIds, remoteViews);
@@ -58,7 +60,6 @@ public class Widget extends AppWidgetProvider {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-
         final String action = intent.getAction();
         if (ACTION_WIDGET_RECEIVER.equals(action)) {
             ArrayList<String> title= new ArrayList<>();
