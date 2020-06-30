@@ -45,9 +45,7 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
             overridePendingTransition(0, 0);
         }
-        editor.clear();
 
-        editor.commit();
 
     }
     @Override
