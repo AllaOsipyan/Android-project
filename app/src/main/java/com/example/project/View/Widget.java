@@ -67,33 +67,33 @@ public class Widget extends AppWidgetProvider {
             try {
                 title = intent.getStringArrayListExtra("title");
                 image = intent.getStringArrayListExtra("image");
+
+                try {
+                    final ArrayList<String> finalImage = image;
+                    final ArrayList<String> finalTitle = title;
+                    Thread t = new Thread(new Runnable() {
+                        public void run() {
+                            try {
+                                bitmap = BitmapFactory.decodeStream((InputStream) new URL(finalImage.get(currNum).replace("\"","").trim()).getContent());
+                                remoteViews.setImageViewBitmap(R.id.widget_image, bitmap);
+                                remoteViews.setTextViewText(R.id.widget_text, finalTitle.get(currNum));
+                                currNum = currNum == 9? 0: currNum+1;
+                                if(widgetManager!=null)
+                                    widgetManager.updateAppWidget(widgetIds, remoteViews);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    });
+                    t.start();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             } catch (NullPointerException e) {
                 Log.e("Error", "msg = null");
             }
 
-            try {
-                final ArrayList<String> finalImage = image;
-                final ArrayList<String> finalTitle = title;
-                Thread t = new Thread(new Runnable() {
-                    public void run() {
-                        try {
-                            bitmap = BitmapFactory.decodeStream((InputStream) new URL(finalImage.get(currNum).replace("\"","").trim()).getContent());
-                            Log.e("bitmap", String.valueOf(bitmap==null));
-                            remoteViews.setImageViewBitmap(R.id.widget_image, bitmap);
-                            remoteViews.setTextViewText(R.id.widget_text, finalTitle.get(currNum));
-                            currNum = currNum == 9? 0: currNum+1;
-                            Log.e("title", finalTitle.get(currNum));
-                            if(widgetManager!=null)
-                                widgetManager.updateAppWidget(widgetIds, remoteViews);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
-                });
-                t.start();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+
         }
         super.onReceive(context, intent);
     }

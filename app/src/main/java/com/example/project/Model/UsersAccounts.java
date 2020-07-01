@@ -41,24 +41,9 @@ public class UsersAccounts {
             return  new User(cursor.getInt(idIndex), cursor.getString(nameIndex), cursor.getString(passwordIndex), cursor.getString(emailIndex));
         }
         cursor.close();
+        dbhelper.close();
         return null;
     }
 
-    public List<User> getAllUsers(){
-        List<User> users = new ArrayList<>();
-        SQLiteDatabase sqLiteDatabase = dbhelper.getWritableDatabase();
-        Cursor cursor = sqLiteDatabase.query("users", null,null,null,null,null, null);
-        if(cursor.moveToFirst()){
-            do {
-                int idIndex = cursor.getColumnIndex("ID");
-                int nameIndex = cursor.getColumnIndex("NAME");
-                int passwordIndex = cursor.getColumnIndex("PASSWORD");
-                int emailIndex = cursor.getColumnIndex("EMAIL");
-                users.add(new User(cursor.getInt(idIndex), cursor.getString(nameIndex), cursor.getString(passwordIndex), cursor.getString(emailIndex)));
-                Log.d("mlog", "name = " + cursor.getString(nameIndex) + ";  email= " + cursor.getString(emailIndex));
-            }while (cursor.moveToNext());
-        }
-        cursor.close();
-        return users;
-    }
+
 }

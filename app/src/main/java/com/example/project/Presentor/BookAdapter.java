@@ -66,7 +66,8 @@ public class BookAdapter  extends RecyclerView.Adapter<BookAdapter.BookViewHolde
         JsonArray authorsList =  mDataset.get(i).getAuthors();
         if (authorsList!=null)
             for (int j=0; j < authorsList.size(); j++) {
-                authors.append(authorsList.get(j).toString() + "\n");
+
+                    authors.append(authorsList.get(j).toString() + "\n");
                 if (j==1)
                     break;
             }

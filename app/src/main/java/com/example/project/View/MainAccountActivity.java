@@ -52,10 +52,6 @@ public class MainAccountActivity extends AppCompatActivity {
         recyclerView.setVisibility(View.INVISIBLE);
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(this,1);
         recyclerView.setLayoutManager(layoutManager);
-
-
-
-
     }
 
 
@@ -83,11 +79,12 @@ public class MainAccountActivity extends AppCompatActivity {
 
             @Override
             public boolean onQueryTextSubmit(String query) {
+
                 search(query);
-                return true;
+                return false;
             }
         };
-
+        searchView.clearFocus();
         searchView.setOnQueryTextListener(queryTextListener);
         return true;
     }

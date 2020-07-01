@@ -53,7 +53,8 @@ public class BookData {
         StringBuilder authorsBuilder = new StringBuilder();
         if (authors!=null)
             for (JsonElement author :authors)
-                authorsBuilder.append(author.toString()+"\n");
+                if(author!=null)
+                    authorsBuilder.append(author.toString()+"\n");
         return authorsBuilder.toString();
     }
 

@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.Random;
 
 public class ServiceNotification extends Service {
-    private static String CHANNEL_ID = "Cat channel";
+    private static String CHANNEL_ID = "Book channel";
     BookService bookService;
     Bitmap bitmap = null;
     @Nullable
@@ -58,14 +58,12 @@ public class ServiceNotification extends Service {
 
 
     }
-    String newQuery = "book";
     Random rnd = new Random();
     private void getQuery() {
 
         List<BookData> userBooks = bookService.findAllBooks();
         if (userBooks.size()!=0) {
             int i = rnd.nextInt(userBooks.size());
-            Log.d("mlog", userBooks.get(i).getTitle());
             notification(userBooks.get(i).getTitle(),userBooks.get(i).getImage(), "Вы недавно искали");
         }
     }

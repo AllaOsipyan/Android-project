@@ -28,7 +28,7 @@ public class SignInActivity extends AppCompatActivity implements SignInDialog.Si
     User user;
     SharedPreferences sharedPreferences;
     SharedPreferences.Editor editor;
-    @SuppressLint("CommitPrefEdits")
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

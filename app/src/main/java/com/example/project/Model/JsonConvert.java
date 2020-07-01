@@ -1,7 +1,12 @@
 package com.example.project.Model;
 
 import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkCapabilities;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
+import android.os.Build;
+import android.util.Log;
 import android.widget.ImageView;
 
 import com.example.project.Presentor.BookPresenter;
@@ -46,7 +51,6 @@ public class JsonConvert {
         BookData bookData;
         Context context;
         String bookName = "qwertyuiopsd";
-        String source;
         BookService bookService ;
         public  List<BookData> booksList = new ArrayList<>();
         public Link book_response = retrofit.create(Link.class);
@@ -55,47 +59,70 @@ public class JsonConvert {
             this.context = context;
             this.bookName = bookName;
             bookService = new BookService(context);
-            this.source = source;
         }
-
+        boolean hasNetwork() {
+            ConnectivityManager connectivityManager = (ConnectivityManager) context.getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+            if (connectivityManager != null) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                    NetworkCapabilities capabilities = connectivityManager.getNetworkCapabilities(connectivityManager.getActiveNetwork());
+                    if (capabilities != null) {
+                        if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)
+                                || capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)
+                                || capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET)
+                        )
+                            return true;
+                    }
+                } else {
+                    try {
+                        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+                        if (activeNetworkInfo != null && activeNetworkInfo.isConnected()) {
+                            return true;
+                        }
+                    } catch (Exception e) {
+                    }
+                }
+            }
+            return false;
+        }
         @Override
         protected List<BookData> doInBackground(Object[] objects) {
+            if(hasNetwork()){
+                try {
+                    Map<String, String> mapJson = new HashMap<String, String>();
+                    mapJson.put("key", API_KEY);
+                    mapJson.put("q", bookName);
+                    Call<JsonObject> call = book_response.getBooks(mapJson);
+                    Response<JsonObject> response = call.execute();
 
-            try {
-                Map<String, String> mapJson = new HashMap<String, String>();
-                mapJson.put("key", API_KEY);
-                mapJson.put("q", bookName);
-                Call<JsonObject> call = book_response.getBooks(mapJson);
-                Response<JsonObject> response = call.execute();
+                    if (response.isSuccessful() && response.code() == 200) {
+                        JSONObject parentJson = new JSONObject(String.valueOf(response.body()));
+                        JSONArray books = parentJson.getJSONArray("items");
+                        for (int i = 0; i<books.length(); i++){
+                            JSONObject bookInfo = ((JSONObject) books.get(i)).getJSONObject("volumeInfo");
+                            Gson gson = new Gson();
+                            bookData = gson.fromJson(String.valueOf(bookInfo), BookData.class);
+                            booksList.add(bookData);
 
-                if (response.isSuccessful() && response.code() == 200) {
-                    JSONObject parentJson = new JSONObject(String.valueOf(response.body()));
-                    JSONArray books = parentJson.getJSONArray("items");
-                    for (int i = 0; i<books.length(); i++){
-                        JSONObject bookInfo = ((JSONObject) books.get(i)).getJSONObject("volumeInfo");
-                        Gson gson = new Gson();
+                        }
 
-                        bookData = gson.fromJson(String.valueOf(bookInfo), BookData.class);
-                        booksList.add(bookData);
-                        String image = bookData.getImageLinks().get("smallThumbnail").toString();
-                        System.out.println(image);
-                        System.out.println("Название: "+bookData.getTitle());
+
                     }
-
-
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
             }
+
             return null;
         }
         @Override
         protected void onPostExecute(Object o) {
-
-            for (BookData book : booksList) {
-                bookService.addBook(book, bookName);
+            if(hasNetwork()){
+                for (BookData book : booksList) {
+                    bookService.addBook(book, bookName);
+                }
+                bookPresenter.presentBook(context);
             }
-            bookPresenter.presentBook(context);
+
         }
     }
 }

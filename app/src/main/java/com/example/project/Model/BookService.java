@@ -20,10 +20,8 @@ import java.util.List;
 
 public class BookService {
     private DB dbhelper;
-    private UsersAccounts  usersAccounts;
     public BookService(Context context){
         dbhelper = new DB(context);
-        usersAccounts = new UsersAccounts(context);
     }
 
 
@@ -35,9 +33,9 @@ public class BookService {
         while (cursor.moveToNext()){
             int queryIndex = cursor.getColumnIndex("USER_QUERY");
             userQueries.add(cursor.getString(queryIndex));
-            Log.d("mlog", "name = " + cursor.getString(queryIndex) );
         }
         cursor.close();
+        dbhelper.close();
         return userQueries;
     }
 
@@ -48,40 +46,15 @@ public class BookService {
         ContentValues contentValues = new ContentValues();
 
         contentValues.put("TITLE", book.getTitle());
-        contentValues.put("AUTHORS", book.transformAuthors());
+        if (!book.transformAuthors().contains("null"))
+            contentValues.put("AUTHORS", book.transformAuthors());
         contentValues.put("USER_QUERY",query);
         contentValues.put("IMAGE", book.getImageLink("smallThumbnail"));
         sqLiteDatabase.insert(DB.All_books, null, contentValues);
         dbhelper.close();
-        Log.d("mlog", "Добавлена книга");
+
     }
 
-    public List<BookData> findUserBooks(User user) {
-        List<BookData> userBooks = new ArrayList<>();
-        JsonArray jsonArray = new JsonArray();
-
-        SQLiteDatabase sqLiteDatabase = dbhelper.getWritableDatabase();
-        // String selection = "USER_ID =?";
-        //String[] whereArgs = new String[]{String.valueOf(user.getId())};
-        Cursor cursor = sqLiteDatabase.query(DB.All_books, null,null,null,null,null, null);
-        while (cursor.moveToNext()){
-            BookData bookData = new BookData();
-            int idIndex = cursor.getColumnIndex("USER_ID");
-            int titleIndex = cursor.getColumnIndex("TITLE");
-            int authorsIndex = cursor.getColumnIndex("AUTHORS");
-            int imageIndex = cursor.getColumnIndex("IMAGE");
-            bookData.setTitle(cursor.getString(titleIndex));
-            bookData.setImage(cursor.getString(imageIndex));
-            for (String author: cursor.getString(authorsIndex).split("\n")) {
-                jsonArray.add(new JsonParser().parse(author));
-            }
-            bookData.setAuthors(jsonArray);
-            userBooks.add(bookData);
-            Log.d("mlog", "name = " + cursor.getString(titleIndex) + ";  email= " + cursor.getString(authorsIndex)+"; id= "+cursor.getString(idIndex));
-        }
-        cursor.close();
-        return userBooks;
-    }
 
     public List<BookData> findBooksByQuery(String query) {
         SQLiteDatabase sqLiteDatabase = dbhelper.getWritableDatabase();
@@ -99,14 +72,13 @@ public class BookService {
 
     private List<BookData> getResult(Cursor cursor){
         List<BookData> userBooks = new ArrayList<>();
-        JsonArray jsonArray = new JsonArray();
+
         while (cursor.moveToNext()){
+            JsonArray jsonArray = new JsonArray();
             BookData bookData = new BookData();
-            int idIndex = cursor.getColumnIndex("USER_ID");
             int titleIndex = cursor.getColumnIndex("TITLE");
             int authorsIndex = cursor.getColumnIndex("AUTHORS");
             int imageIndex = cursor.getColumnIndex("IMAGE");
-            int qu =  cursor.getColumnIndex("USER_QUERY");
             bookData.setTitle(cursor.getString(titleIndex));
             bookData.setImage(cursor.getString(imageIndex));
             for (String author: cursor.getString(authorsIndex).split("\n")) {
@@ -114,9 +86,9 @@ public class BookService {
             }
             bookData.setAuthors(jsonArray);
             userBooks.add(bookData);
-            Log.d("mlog", "name = " + cursor.getString(titleIndex)+ "query" + cursor.getString(qu) + ";  email= " + cursor.getString(authorsIndex)+"; id= "+cursor.getString(idIndex));
         }
         cursor.close();
+        dbhelper.close();
         return userBooks;
     }
 }

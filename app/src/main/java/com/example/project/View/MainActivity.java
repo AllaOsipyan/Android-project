@@ -27,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
     ImageView bookImage;
     TextView bookTitle;
     BookPresenter bookPresenter;
-    @SuppressLint("CommitPrefEdits")
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

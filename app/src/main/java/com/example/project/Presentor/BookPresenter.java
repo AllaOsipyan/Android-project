@@ -13,7 +13,7 @@ import com.example.project.View.MainActivity;
 import java.util.List;
 
 public class BookPresenter {
-    @SuppressLint("StaticFieldLeak")
+
     private static MainActivity mainActivity;
     private static MainAccountActivity mainAccountActivity;
     private static int currentBookId = 0;
@@ -34,14 +34,20 @@ public class BookPresenter {
 
     }
     public void getBook(Context context, String bookName){
-        query = bookName;
+
         List<String> bookQueries =  bookService.findUserQueries();
-        if(!bookQueries.contains(query)) {
-            new JsonConvert.ParseTask(context, bookName).execute();
+        if(!bookName.equals(query)||context==mainActivity){
+            query = bookName;
+            if(!bookQueries.contains(bookName)) {
+                new JsonConvert.ParseTask(context, bookName).execute();
+
+            }
+            else{
+
+                presentBook(context);
+            }
 
         }
-        else
-            presentBook(context);
 
     }
 
@@ -57,7 +63,7 @@ public class BookPresenter {
                 mainActivity.showBook(currentBook.getTitle(), currentBook.getImageLink("smallThumbnail"));
                 currentBookId = currentBookId==allBooks.size()-1? 0: currentBookId + 1;
             }
-            Log.d("mlog", "current = " +currentBookId);
+
 
         }
     }

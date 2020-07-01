@@ -30,7 +30,7 @@ public class RegistrationActivity extends Activity {
     RegistrationPresenter registrationPresenter = new RegistrationPresenter(this);
     SharedPreferences sharedPreferences;
 
-    @SuppressLint("CommitPrefEdits")
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
